@@ -42,8 +42,8 @@ public class ViewGood extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.good_view);
 
-        binding.slotMachineLay.setVisibility(View.VISIBLE);
-        binding.backSlotMachineLay.setVisibility(View.INVISIBLE);
+        binding.slotMachineLay.setVisibility(View.INVISIBLE);
+        binding.backSlotMachineLay.setVisibility(View.VISIBLE);
 
         binding.balanceScore.setText(String.format("%,d", balance).replace(',', '_'));
         binding.rateScore.setText(String.format("%,d", rate).replace(',', '_'));
@@ -111,7 +111,7 @@ public class ViewGood extends AppCompatActivity {
     }
 
     private void playGame() {
-//        startAnim();
+        startAnim();
 
         int position1 = random.nextInt(slotAdapter1.getItemCount());
         int position2 = random.nextInt(slotAdapter2.getItemCount());

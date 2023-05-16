@@ -34,7 +34,7 @@ public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.ItemViewHolder
 
     @Override
     public int getItemCount() {
-        return 100;
+        return 10000;
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {

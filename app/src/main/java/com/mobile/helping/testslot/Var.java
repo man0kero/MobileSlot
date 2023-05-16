@@ -21,4 +21,5 @@ public class Var {
 
     public static int balance = 500000;
     public static int rate = 500;
+    public static int ITEM_COUNT = 100;
 }

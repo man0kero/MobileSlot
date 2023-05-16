@@ -13,11 +13,11 @@
         android:theme="@style/Theme.TestSlot"
         tools:targetApi="33">
         <activity
-            android:name=".MainActivity"
+            android:name=".ViewGood"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ViewGood"
+            android:name="MainActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>

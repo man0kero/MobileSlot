@@ -19,6 +19,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="You LOSE" />
 
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mainView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:text="MainView"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/winLoseText"/>
+
         <ImageView
             android:id="@+id/first"
             android:layout_width="100dp"
@@ -80,21 +92,17 @@
             app:layout_constraintTop_toTopOf="@id/slotMachine" />
 
 
-        <FrameLayout
-            android:id="@+id/slotMachine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
 
 
             <LinearLayout
-                android:id="@+id/slotMachineLay"
+                android:id="@+id/slotMachine"
                 android:layout_width="wrap_content"
                 android:layout_height="348dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/line1"
@@ -116,31 +124,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/backSlotMachineLay"
-                android:layout_width="wrap_content"
-                android:layout_height="348dp"
-                android:orientation="horizontal">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/backLine1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:nestedScrollingEnabled="false" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/backLine2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:nestedScrollingEnabled="false" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/backLine3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:nestedScrollingEnabled="false" />
-            </LinearLayout>
-        </FrameLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button"
