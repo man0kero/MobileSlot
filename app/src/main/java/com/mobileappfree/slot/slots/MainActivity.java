@@ -1,19 +1,19 @@
-package com.mobile.helping.testslot;
+package com.mobileappfree.slot.slots;
 
 import static android.content.ContentValues.TAG;
+import static com.mobileappfree.slot.slots.Var.balance;
+import static com.mobileappfree.slot.slots.Var.images1;
+import static com.mobileappfree.slot.slots.Var.images2;
+import static com.mobileappfree.slot.slots.Var.images3;
+import static com.mobileappfree.slot.slots.Var.rate;
 
-import static com.mobile.helping.testslot.Var.balance;
-import static com.mobile.helping.testslot.Var.images1;
-import static com.mobile.helping.testslot.Var.images2;
-import static com.mobile.helping.testslot.Var.images3;
-import static com.mobile.helping.testslot.Var.rate;
 
-import android.content.Intent;
-import android.graphics.Color;
+import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,97 +21,118 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mobile.helping.testslot.databinding.SlotBinding;
+
+import com.google.android.gms.ads.AdRequest;
+import com.mobileappfree.slot.slots.ads.AdOpen;
+import com.mobileappfree.slot.slots.ads.InterstitialAdImpl;
+import com.mobileappfree.slot.slots.databinding.ActivityMainBinding;
 
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
+    private AdRequest adRequest;
+    private InterstitialAdImpl interstitialAd;
 
-    SlotBinding binding;
+    private SlotAdapter slotAdapter1;
+    private SlotAdapter slotAdapter2;
+    private SlotAdapter slotAdapter3;
 
-    SlotAdapter_test slotAdapter1;
-    SlotAdapter_test slotAdapter2;
-    SlotAdapter_test slotAdapter3;
-
-    int previousPosition1 = 0;
-    int previousPosition2 = 0;
-    int previousPosition3 = 0;
-    int position1;
-    int position2;
-    int position3;
-    long resultLine1;
-    long resultLine2;
-    long resultLine3;
-    RecyclerView.OnScrollListener scrollListener;
-
-
-    private Handler handler = new Handler();
-    private Runnable checkScrollingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            checkScrollingStatus();
-            handler.postDelayed(this, 2000);
-        }
-    };
+    private Handler handler;
+    private Runnable checkScrollingRunnable;
 
     private boolean isFirstListScrollingFinished = false;
     private boolean isSecondListScrollingFinished = false;
     private boolean isThirdListScrollingFinished = false;
     private boolean isPlaying = false;
 
+    private int previousPosition1 = 0;
+    private int previousPosition2 = 0;
+    private int previousPosition3 = 0;
+    private long resultLine1;
+    private long resultLine2;
+    private long resultLine3;
 
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.slot);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         provideSlotsAdapters();
         setClickListeners();
 
+        loadAds();
 
+        handler = new Handler();
+        checkScrollingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                checkScrollingStatus();
+                handler.postDelayed(this, 2000);
+            }
+        };
 
         binding.balanceScore.setText(String.format("%,d", balance).replace(',', ' '));
         binding.rateScore.setText(String.format("%,d", rate).replace(',', ' '));
     }
 
+    private void loadAds() {
+        Application application = getApplication();
+        ((AdOpen) application).showAdIfAvailable(MainActivity.this,
+                new AdOpen.OnShowAdCompleteListener() {
+                    @Override
+                    public void onShowAdComplete() {
+                        Log.d(TAG, "onShowAdComplete: ");
+                    }
+                });
+        adRequest = new AdRequest.Builder().build();
+        binding.adView.loadAd(adRequest);
+        interstitialAd = new InterstitialAdImpl();
+        interstitialAd.loadInterstitialAd(this);
+    }
+
     private void setClickListeners() {
-        binding.button.setOnClickListener(v -> {
-            binding.winLoseText.setVisibility(View.INVISIBLE);
-            binding.button.setEnabled(false);
-            playGame();
+        binding.scrollOff.setOnClickListener(v -> {
+            Toast.makeText(this, "Press Play", Toast.LENGTH_SHORT).show();
         });
 
-        binding.mainView.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ViewGood.class);
-            this.startActivity(intent);
+        binding.playBtn.setOnClickListener(v -> {
+                binding.winLoseTextRight.setVisibility(View.INVISIBLE);
+                binding.winLoseTextLeft.setVisibility(View.INVISIBLE);
+                binding.playBtn.setEnabled(false);
+                playGame();
+                count++;
         });
 
         binding.minus.setOnClickListener(v -> {
             rate -= 500;
             if (rate <= 500) {
                 rate = 500;
-                binding.rateScore.setText(String.format("%,d", rate).replace(',', '_'));
+                binding.rateScore.setText(String.format("%,d", rate).replace(',', ' '));
             } else {
-                binding.rateScore.setText(String.format("%,d", rate).replace(',', '_'));
+                binding.rateScore.setText(String.format("%,d", rate).replace(',', ' '));
             }
+            interstitialAd.showAds(this);
         });
 
         binding.plus.setOnClickListener(v -> {
             rate += 500;
             if (rate >= 2000) {
                 rate = 2000;
-                binding.rateScore.setText(String.format("%,d", rate).replace(',', '_'));
+                binding.rateScore.setText(String.format("%,d", rate).replace(',', ' '));
             } else {
-                binding.rateScore.setText(String.format("%,d", rate).replace(',', '_'));
+                binding.rateScore.setText(String.format("%,d", rate).replace(',', ' '));
             }
+            interstitialAd.showAds(this);
         });
     }
 
     private void provideSlotsAdapters() {
-        slotAdapter1 = new SlotAdapter_test(images1);
-        slotAdapter2 = new SlotAdapter_test(images2);
-        slotAdapter3 = new SlotAdapter_test(images3);
+        slotAdapter1 = new SlotAdapter(images1);
+        slotAdapter2 = new SlotAdapter(images2);
+        slotAdapter3 = new SlotAdapter(images3);
 
         binding.line1.setAdapter(slotAdapter1);
         binding.line1.setLayoutManager(new LinearLayoutManager(this));
@@ -123,27 +144,29 @@ public class MainActivity extends AppCompatActivity {
         binding.line3.setLayoutManager(new LinearLayoutManager(this));
     }
 
-
     private void playGame() {
         isPlaying = true;
         Random random = new Random();
+        int position1;
         do {
-            position1 = random.nextInt(slotAdapter1.getItemCount());
+            position1 = random.nextInt((slotAdapter1.getItemCount() - 5) - (5) + 1) + (5);
         } while (position1 == previousPosition1);
         previousPosition1 = position1;
 
+        int position2;
         do {
-            position2 = random.nextInt(slotAdapter2.getItemCount());
+            position2 = random.nextInt((slotAdapter1.getItemCount() - 5) - (5) + 1) + (5);
         } while (position2 == previousPosition2);
         previousPosition2 = position2;
 
+        int position3;
         do {
-            position3 = random.nextInt(slotAdapter3.getItemCount());
+            position3 = random.nextInt((slotAdapter1.getItemCount() - 5) - (5) + 1) + (5);
         } while (position3 == previousPosition3);
         previousPosition3 = position3;
         Log.d(TAG, "playGame: " + position1 + " " + position2 + " " + position3);
 
-        scrollListener = new RecyclerView.OnScrollListener() {
+        RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -165,28 +188,17 @@ public class MainActivity extends AppCompatActivity {
         binding.line1.addOnScrollListener(scrollListener);
         binding.line1.smoothScrollToPosition(position1);
 
-        LinearLayoutManager manager1 = (LinearLayoutManager) binding.line1.getLayoutManager();
-        manager1.scrollToPositionWithOffset(position1, 0);
-
         binding.line2.addOnScrollListener(scrollListener);
         binding.line2.smoothScrollToPosition(position2);
-
-        LinearLayoutManager manager2 = (LinearLayoutManager) binding.line2.getLayoutManager();
-        manager2.scrollToPositionWithOffset(position2, 0);
 
         binding.line3.addOnScrollListener(scrollListener);
         binding.line3.smoothScrollToPosition(position3);
 
-        LinearLayoutManager manager3 = (LinearLayoutManager) binding.line3.getLayoutManager();
-        manager3.scrollToPositionWithOffset(position3, 0);
         handler.postDelayed(checkScrollingRunnable, 2000);
     }
 
-
-
-
     private void checkScrollingStatus() {
-        if(isPlaying) {
+        if (isPlaying) {
             if (!binding.line1.getLayoutManager().isSmoothScrolling()) {
                 isFirstListScrollingFinished = true;
             }
@@ -201,37 +213,46 @@ public class MainActivity extends AppCompatActivity {
 
             if (isFirstListScrollingFinished && isSecondListScrollingFinished && isThirdListScrollingFinished) {
                 isPlaying = false;
-                binding.button.setEnabled(true);
+                binding.playBtn.setEnabled(true);
+
                 isFirstListScrollingFinished = false;
                 isSecondListScrollingFinished = false;
                 isThirdListScrollingFinished = false;
+
                 handler.removeCallbacks(checkScrollingRunnable);
                 checkResults(resultLine1, resultLine2, resultLine3);
-
-
             }
         }
     }
 
-
     private void checkResults(long position1, long position2, long position3) {
-        binding.first.setImageResource((int)position1);
-        binding.second.setImageResource((int)position2);
-        binding.third.setImageResource((int)position3);
         if (position1 == position2 && position2 == position3) {
             balance += rate;
-            binding.balanceScore.setText(String.format("%,d", balance).replace(',', '_'));
-            binding.winLoseText.setText("WIN");
-            binding.winLoseText.setTextColor(Color.GREEN);
+            binding.balanceScore.setText(String.format("%,d", balance).replace(',', ' '));
+            textSetter("WIN");
+            interstitialAd.showAds(this);
             Log.d(TAG, "checkResults: WIN");
-            binding.getRoot().setBackgroundColor(Color.GREEN);
-
         } else {
             balance -= rate;
-            binding.balanceScore.setText(String.format("%,d", balance).replace(',', '_'));
-            binding.winLoseText.setText("LOSE");
-            binding.winLoseText.setTextColor(Color.RED);
+            binding.balanceScore.setText(String.format("%,d", balance).replace(',', ' '));
+            textSetter("LOSE");
+            interstitialAd.showAds(this);
             Log.d(TAG, "checkResults: LOSE");
         }
+    }
+
+    private void textSetter(String textResult) {
+        if (textResult.equals("WIN")) {
+            binding.winLoseTextRight.setTextColor(getColor(R.color.winColor));
+            binding.winLoseTextLeft.setTextColor(getColor(R.color.winColor));
+        } else {
+            binding.winLoseTextRight.setTextColor(getColor(R.color.lose_color));
+            binding.winLoseTextLeft.setTextColor(getColor(R.color.lose_color));
+        }
+        binding.winLoseTextRight.setText(textResult);
+        binding.winLoseTextRight.setVisibility(View.VISIBLE);
+
+        binding.winLoseTextLeft.setText(textResult);
+        binding.winLoseTextLeft.setVisibility(View.VISIBLE);
     }
 }

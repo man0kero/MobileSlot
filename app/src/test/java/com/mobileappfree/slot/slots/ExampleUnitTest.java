@@ -1,4 +1,4 @@
-package com.mobile.helping.testslot;
+package com.mobileappfree.slot.slots;
 
 import org.junit.Test;
 

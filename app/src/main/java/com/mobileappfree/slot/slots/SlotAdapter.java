@@ -1,6 +1,6 @@
-package com.mobile.helping.testslot;
+package com.mobileappfree.slot.slots;
 
-import static com.mobile.helping.testslot.Var.ITEM_COUNT;
+import static com.mobileappfree.slot.slots.Var.ITEM_COUNT;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mobile.helping.testslot.databinding.ItemSlotBinding;
+import com.mobileappfree.slot.slots.databinding.ItemSlotBinding;
+
 
 public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.ItemViewHolder> {
 

@@ -1,4 +1,4 @@
-package com.mobile.helping.testslot;
+package com.mobileappfree.slot.slots;
 
 public class Var {
     public static int[] images1 = new int[]{R.drawable.image1,

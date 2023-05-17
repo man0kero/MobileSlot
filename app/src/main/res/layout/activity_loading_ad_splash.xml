@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_port"
+    android:gravity="center_horizontal"
+    tools:context=".LoadingAdSplash">
+    
+    
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mobile slot"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/caesar_dressing"
+        android:textSize="60sp"
+        android:textColor="@color/winColor"
+        android:gravity="center_horizontal"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="450dp"
+        android:src="@drawable/women_port"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
