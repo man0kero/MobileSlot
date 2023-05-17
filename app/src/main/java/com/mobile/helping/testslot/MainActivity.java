@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        binding.balanceScore.setText(String.format("%,d", balance).replace(',', '_'));
-        binding.rateScore.setText(String.format("%,d", rate).replace(',', '_'));
+        binding.balanceScore.setText(String.format("%,d", balance).replace(',', ' '));
+        binding.rateScore.setText(String.format("%,d", rate).replace(',', ' '));
     }
 
     private void setClickListeners() {
@@ -164,10 +164,21 @@ public class MainActivity extends AppCompatActivity {
 
         binding.line1.addOnScrollListener(scrollListener);
         binding.line1.smoothScrollToPosition(position1);
+
+        LinearLayoutManager manager1 = (LinearLayoutManager) binding.line1.getLayoutManager();
+        manager1.scrollToPositionWithOffset(position1, 0);
+
         binding.line2.addOnScrollListener(scrollListener);
         binding.line2.smoothScrollToPosition(position2);
+
+        LinearLayoutManager manager2 = (LinearLayoutManager) binding.line2.getLayoutManager();
+        manager2.scrollToPositionWithOffset(position2, 0);
+
         binding.line3.addOnScrollListener(scrollListener);
         binding.line3.smoothScrollToPosition(position3);
+
+        LinearLayoutManager manager3 = (LinearLayoutManager) binding.line3.getLayoutManager();
+        manager3.scrollToPositionWithOffset(position3, 0);
         handler.postDelayed(checkScrollingRunnable, 2000);
     }
 
@@ -196,12 +207,17 @@ public class MainActivity extends AppCompatActivity {
                 isThirdListScrollingFinished = false;
                 handler.removeCallbacks(checkScrollingRunnable);
                 checkResults(resultLine1, resultLine2, resultLine3);
+
+
             }
         }
     }
 
 
     private void checkResults(long position1, long position2, long position3) {
+        binding.first.setImageResource((int)position1);
+        binding.second.setImageResource((int)position2);
+        binding.third.setImageResource((int)position3);
         if (position1 == position2 && position2 == position3) {
             balance += rate;
             binding.balanceScore.setText(String.format("%,d", balance).replace(',', '_'));

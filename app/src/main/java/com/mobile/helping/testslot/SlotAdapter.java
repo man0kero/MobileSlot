@@ -1,5 +1,7 @@
 package com.mobile.helping.testslot;
 
+import static com.mobile.helping.testslot.Var.ITEM_COUNT;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -34,7 +36,7 @@ public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.ItemViewHolder
 
     @Override
     public int getItemCount() {
-        return 10000;
+        return ITEM_COUNT;
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
